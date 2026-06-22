@@ -3,7 +3,7 @@ package model;
 /**
  * Clase base que define el comportamiento y datos generales de una Persona.
  * Mantiene una relación de composición con la clase Direccion.
- * * @author Gabriel
+ * @author Gabriel
  */
 public class Persona {
     private String nombre;
@@ -14,7 +14,7 @@ public class Persona {
     private String rut;
 
     /**
-     * Constructor para inicializar una nueva Persona.
+     * Constructor para inicializar una nueva Persona con validaciones integradas.
      * @param nombre Nombre de pila.
      * @param apellido Apellidos paterno/materno.
      * @param direccion Objeto Direccion (Relación de Composición).
@@ -23,12 +23,25 @@ public class Persona {
      * @param rut Rol Único Tributario (Identificador único).
      */
     public Persona(String nombre, String apellido, Direccion direccion, String telefono, String email, String rut) {
-        this.nombre = nombre;
-        this.apellido = apellido;
+        try {
+            if (nombre == null || nombre.trim().isEmpty()) {
+                throw new IllegalArgumentException("El nombre proporcionado no puede ser nulo o vacío.");
+            }
+            if (apellido == null || apellido.trim().isEmpty()) {
+                throw new IllegalArgumentException("El apellido proporcionado no puede ser nulo o vacío.");
+            }
+            this.nombre = nombre.trim();
+            this.apellido = apellido.trim();
+        } catch (IllegalArgumentException e) {
+            System.out.println(" Error de validación en parámetros de Persona: " + e.getMessage());
+            this.nombre = "Sin Nombre";
+            this.apellido = "Sin Apellido";
+        }
+
         this.direccion = direccion;
-        this.telefono = telefono;
-        this.email = email;
-        this.rut = rut;
+        this.telefono = telefono != null ? telefono.trim() : "";
+        this.email = email != null ? email.trim() : "";
+        this.rut = rut != null ? rut.trim() : "";
     }
 
     public String getNombre() {

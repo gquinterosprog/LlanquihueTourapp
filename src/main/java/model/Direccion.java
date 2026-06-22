@@ -3,7 +3,7 @@ package model;
 /**
  * Clase que representa la dirección geográfica de una persona o entidad.
  * Componente utilizado para establecer relaciones de composición (agregación).
- * * @author Gabriel
+ * @author Gabriel
  */
 public class Direccion {
 
@@ -19,14 +19,20 @@ public class Direccion {
      * @param ciudad Ciudad base.
      * @param comuna Comuna residencial.
      * @param calle Nombre de la calle.
-     * @param numeroCalle Altura o número de la propiedad.
+     * @param numeroCalleStr Altura o número de la propiedad en formato texto para validar.
      */
-    public Direccion(String region, String ciudad, String comuna, String calle, int numeroCalle) {
+    public Direccion(String region, String ciudad, String comuna, String calle, String numeroCalleStr) {
         this.region = region;
         this.ciudad = ciudad;
         this.comuna = comuna;
         this.calle = calle;
-        this.numeroCalle = numeroCalle;
+
+        try {
+            this.numeroCalle = Integer.parseInt(numeroCalleStr.trim());
+        } catch (NumberFormatException e) {
+            System.out.println("️Error: El número de calle '" + numeroCalleStr + "' no es válido. Se asignará 0 por defecto.");
+            this.numeroCalle = 0;
+        }
     }
 
     public String getRegion() {

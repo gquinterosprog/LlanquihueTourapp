@@ -3,7 +3,7 @@ package model;
 /**
  * Clase derivada que hereda los atributos de Persona y añade la lógica laboral.
  * Representa a un trabajador activo dentro de Llanquihue Tour.
- * * @author Gabriel
+ * @author Gabriel
  */
 public class Empleado extends Persona {
     private String area;
@@ -11,7 +11,7 @@ public class Empleado extends Persona {
     private String jornada;
 
     /**
-     * Constructor para crear un Empleado invocando la estructura de la clase base.
+     * Constructor para crear un Empleado invocando la estructura de la clase base y aplicando validaciones.
      * @param nombre Nombre heredado de Persona.
      * @param apellido Apellido heredado de Persona.
      * @param direccion Dirección heredada de Persona.
@@ -24,9 +24,23 @@ public class Empleado extends Persona {
      */
     public Empleado(String nombre, String apellido, Direccion direccion, String telefono, String email, String rut, String area, String superior, String jornada) {
         super(nombre, apellido, direccion, telefono, email, rut);
-        this.area = area;
-        this.superior = superior;
-        this.jornada = jornada;
+
+        try {
+            if (area == null || area.trim().isEmpty()) {
+                throw new IllegalArgumentException("El área laboral asignada no puede ser nula o vacía.");
+            }
+            if (jornada == null || jornada.trim().isEmpty()) {
+                throw new IllegalArgumentException("La jornada laboral asignada no puede ser nula o vacía.");
+            }
+            this.area = area.trim();
+            this.jornada = jornada.trim();
+        } catch (IllegalArgumentException e) {
+            System.out.println(" Error de validación en parámetros de Empleado: " + e.getMessage());
+            this.area = "General";
+            this.jornada = "No asignada";
+        }
+
+        this.superior = superior != null ? superior.trim() : "Sin asignar";
     }
 
     public String getArea() {
