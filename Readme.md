@@ -1,35 +1,37 @@
-# Proyecto Llanquihue Tour
+# Proyecto Llanquihue Tour - Semana 5
 
-Este proyecto es una aplicación modular en Java para la gestión de colaboradores de la empresa "Llanquihue Tour", desarrollada para la asignatura de Programación Orientada a Objetos (Desarrollo Orientado a Objetos I). El sistema automatiza procesos manuales permitiendo cargar registros desde archivos externos y realizar búsquedas o filtros eficientes.
+Este proyecto consiste en una aplicación de consola en Java diseñada para gestionar el personal de la agencia "Llanquihue Tour". El sistema automatiza el trabajo manual permitiendo cargar todos los datos de los trabajadores desde un archivo de texto externo, almacenarlos en memoria y realizar búsquedas de forma rápida.
 
 ## Estructura del Código
 
-El proyecto está organizado en cuatro paquetes dentro de la carpeta `src` para garantizar una arquitectura limpia y modular:
+Para que el proyecto sea ordenado y modular, el código está organizado en cuatro paquetes dentro de la carpeta `src`:
 
-* **`model`**: Contiene las clases que definen las entidades del sistema (`Persona`, `Empleado`, `Direccion`).
-* **`service`**: Capa de lógica de negocio que gestiona las operaciones sobre los datos con la clase `AgenciaService`.
-* **`util`**: Contiene componentes utilitarios de persistencia, específicamente la clase `LectorArchivo`.
-* **`app`**: Contiene la clase `Main` que actúa como el orquestador y ejecuta la aplicación.
+* **`model`**: Contiene las clases base del sistema (`Persona`, `Empleado` y `Direccion`).
+* **`service`**: Incluye la clase `AgenciaService`, que maneja la lógica de las búsquedas y los listados de empleados en memoria.
+* **`util`**: Contiene la clase `LectorArchivo`, encargada exclusivamente de abrir y procesar el archivo de texto.
+* **`app`**: Contiene la clase `Main` que inicia la aplicación y despliega el menú.
 
 ## Conceptos de POO Aplicados
 
-En el código se implementaron los siguientes pilares y buenas prácticas solicitados en la evaluación:
+En el desarrollo se aplicaron los siguientes requerimientos de programación orientada a objetos:
 
-1. **Encapsulamiento**: En todas las clases del modelo (`Direccion`, `Persona`, `Empleado`) los atributos se definieron como privados (`private`) y su acceso se controla estrictamente mediante métodos getters y setters de estructura estándar.
-2. **Composición**: La clase `Persona` tiene como atributo un objeto de tipo `Direccion`. Esto establece una relación de composición, donde un objeto del modelo no se instancia sin definir primero su ubicación geográfica.
-3. **Herencia**: La clase `Empleado` hereda de la clase `Persona` (`extends`). Esto permite reutilizar los atributos comunes (nombre, rut, teléfono, etc.) y añadir los campos específicos del trabajo, llamando al constructor del padre mediante `super()`.
-4. **Validación y Robustez (Try-Catch)**:
-    * Se aplicó control de excepciones (`IOException`) con *try-with-resources* en la lectura física para asegurar el cierre automático del archivo y evitar fugas de memoria.
-    * Se incorporó validación defensiva en el constructor (`IllegalArgumentException`) atrapada mediante bloques `try-catch` internos para advertir datos no válidos en consola y asignar valores por defecto sin interrumpir la ejecución del sistema.
-5. **Colecciones Dinámicas**: Se utiliza la estructura `ArrayList<Empleado>` para manipular y almacenar dinámicamente en memoria la información procesada.
+1. **Encapsulamiento**: Todos los atributos de las clases son privados (`private`) y se accede a ellos estrictamente a través de métodos getters y setters estándar.
+2. **Composición**: La clase `Persona` tiene un atributo de tipo `Direccion`. Esto significa que no se puede crear un trabajador sin asignarle primero su ubicación.
+3. **Herencia**: La clase `Empleado` hereda de `Persona` (`extends`). Aprovecha los campos comunes (como nombre y rut) mediante el uso de `super()` en su constructor y añade los datos propios de su puesto de trabajo.
+4. **Manejo de Excepciones (Try-Catch)**:
+   * Se usó un bloque `try-catch` para controlar la lectura del archivo `.txt`, asegurando que el flujo se cierre bien y no falle el sistema si el archivo no existe.
+   * Se añadieron validaciones dentro del constructor usando `try-catch` e `IllegalArgumentException` para detectar si un nombre viene vacío, mostrando una advertencia en la consola y asignando un valor por defecto para que el programa no se caiga.
+5. **Colecciones (`ArrayList`)**: Los empleados cargados desde el archivo se guardan en un `ArrayList<Empleado>` para poder manejarlos dinámicamente.
 
-## Ejecución
+## Ejecución y Menú del Sistema
 
-Para probar el funcionamiento del sistema, basta con ejecutar la clase `Main.java`.
+Para probar el programa, se debe ejecutar la clase `Main.java`. El sistema leerá automáticamente el archivo `empleados.txt` ubicado en la raíz y mostrará un menú interactivo en la consola con las siguientes opciones:
 
-Al iniciar, el programa buscará automáticamente el archivo externo `empleados.txt` en la raíz del proyecto. La clase `LectorArchivo` procesará de forma automatizada las líneas de texto plano separadas por comas, construyendo los objetos correspondientes para rellenar la colección. Luego, a través de `AgenciaService`, se desplegará un menú en la consola que le permite al usuario listar la totalidad de los colaboradores registrados (`toString()`) o aplicar filtros dinámicos de búsqueda por área específica.
+* **Opción 1 (Mostrar todos los colaboradores)**: Recorre la lista completa y muestra en pantalla los datos de todos los empleados ordenados, utilizando el método `toString()`.
+* **Opción 2 (Filtrar colaboradores por área)**: El usuario ingresa un área (por ejemplo: Operaciones, Ventas, Administrativo) y el sistema busca las coincidencias (sin importar mayúsculas o minúsculas) para mostrar solo a los trabajadores de ese sector.
+* **Opción 3 (Salir)**: Cierra la aplicación de forma segura.
 
 ---
-**Alumno:** Gabriel Quinteros
-
-**Profesor:** Pablo Vilches
+**Alumno:** Gabriel Quinteros  
+**Profesor:** Pablo Vilches  
+**Asignatura:** Desarrollo Orientado a Objetos I
