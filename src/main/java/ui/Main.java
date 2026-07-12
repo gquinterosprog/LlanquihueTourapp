@@ -1,4 +1,4 @@
-package app;
+package ui;
 
 import model.*;
 import data.AgenciaService;
@@ -19,7 +19,7 @@ public class Main {
         cargarDatosPrueba(servicio);
 
         String[] opcionesMenu = {
-                "1. Mostrar Reporte Polimórfico (instanceof)",
+                "1. Mostrar Reporte",
                 "2. Registrar Guía Turístico",
                 "3. Registrar Vehículo",
                 "4. Registrar Colaborador Externo",
