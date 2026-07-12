@@ -2,44 +2,35 @@ package model;
 
 import data.Validador;
 
-/**
- * Clase que representa la dirección geográfica de una persona o entidad.
- * Componente utilizado para establecer relaciones de composición (agregación).
- * @author Gabriel
- */
+/** Dirección asociada a una persona de la agencia. */
 public class Direccion {
-
     private String region;
     private String ciudad;
     private String comuna;
     private String calle;
     private int numeroCalle;
 
-    public Direccion(String region, String ciudad, String comuna, String calle, String numeroCalleStr) {
-        this.region = region;
-        this.ciudad = ciudad;
-        this.comuna = comuna;
-        this.calle = calle;
-        this.numeroCalle = Validador.validarEntero(numeroCalleStr, 0);
+    public Direccion(String region, String ciudad, String comuna, String calle, String numeroCalle) {
+        this.region = Validador.validarTexto(region, "Sin región");
+        this.ciudad = Validador.validarTexto(ciudad, "Sin ciudad");
+        this.comuna = Validador.validarTexto(comuna, "Sin comuna");
+        this.calle = Validador.validarTexto(calle, "Sin calle");
+        this.numeroCalle = Validador.validarEntero(numeroCalle, 0);
     }
 
     public String getRegion() { return region; }
-    public void setRegion(String region) { this.region = region; }
-
+    public void setRegion(String region) { this.region = Validador.validarTexto(region, "Sin región"); }
     public String getCiudad() { return ciudad; }
-    public void setCiudad(String ciudad) { this.ciudad = ciudad; }
-
+    public void setCiudad(String ciudad) { this.ciudad = Validador.validarTexto(ciudad, "Sin ciudad"); }
     public String getComuna() { return comuna; }
-    public void setComuna(String comuna) { this.comuna = comuna; }
-
+    public void setComuna(String comuna) { this.comuna = Validador.validarTexto(comuna, "Sin comuna"); }
     public String getCalle() { return calle; }
-    public void setCalle(String calle) { this.calle = calle; }
-
+    public void setCalle(String calle) { this.calle = Validador.validarTexto(calle, "Sin calle"); }
     public int getNumeroCalle() { return numeroCalle; }
-    public void setNumeroCalle(int numeroCalle) { this.numeroCalle = numeroCalle; }
+    public void setNumeroCalle(int numeroCalle) { this.numeroCalle = Math.max(numeroCalle, 0); }
 
     @Override
     public String toString() {
-        return "Direccion{Region='" + region + "', Ciudad='" + ciudad + "', Comuna='" + comuna + "', Calle='" + calle + "', numeroCalle=" + numeroCalle + "}";
+        return calle + " " + numeroCalle + ", " + comuna + ", " + ciudad + ", " + region;
     }
 }

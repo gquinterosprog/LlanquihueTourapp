@@ -2,32 +2,30 @@ package model;
 
 import data.Validador;
 
-/**
- * Clase derivada que hereda los atributos de Persona y añade la lógica laboral.
- * Implementa la interfaz Registrable.
- * @author Gabriel
- */
+/** Colaborador interno de la agencia. */
 public class Empleado extends Persona implements Registrable {
     private String area;
     private String superior;
     private String jornada;
 
-    public Empleado(String nombre, String apellido, Direccion direccion, String telefono, String email, String rut, String area, String superior, String jornada) {
+    public Empleado(String nombre, String apellido, Direccion direccion, String telefono,
+                    String email, String rut, String area, String superior, String jornada) {
         super(nombre, apellido, direccion, telefono, email, rut);
         this.area = Validador.validarTexto(area, "General");
+        this.superior = Validador.validarTexto(superior, "Sin asignar");
         this.jornada = Validador.validarTexto(jornada, "No asignada");
-        this.superior = superior != null ? superior.trim() : "Sin asignar";
     }
 
     public String getArea() { return area; }
-    public void setArea(String area) { this.area = area; }
+    public void setArea(String area) { this.area = Validador.validarTexto(area, "General"); }
     public String getSuperior() { return superior; }
-    public void setSuperior(String superior) { this.superior = superior; }
+    public void setSuperior(String superior) { this.superior = Validador.validarTexto(superior, "Sin asignar"); }
     public String getJornada() { return jornada; }
-    public void setJornada(String jornada) { this.jornada = jornada; }
+    public void setJornada(String jornada) { this.jornada = Validador.validarTexto(jornada, "No asignada"); }
 
     @Override
     public String mostrarResumen() {
-        return "Empleado de Planta - Nombre: " + getNombre() + " " + getApellido() + " | RUT: " + getRut() + " | Área: " + area + " | Jornada: " + jornada;
+        return "Empleado interno | Nombre: " + getNombre() + " " + getApellido()
+                + " | Área: " + area + " | Jornada: " + jornada;
     }
 }

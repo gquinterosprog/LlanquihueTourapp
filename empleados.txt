@@ -1,3 +1,0 @@
-Gabriel, Quinteros, Los Lagos, Frutillar, Frutillar, Philippi, 123, +56911223344, gabriel@tour.cl, 11222333-4, Administracion, Directorio, Completa
-Maria, Lopez, Los Lagos, Llanquihue, Llanquihue, Vicente Perez, 456, +56955667788, maria@tour.cl, 15555666-7, Turismo, Gabriel Quinteros, MediaGUIA;Vicente;Sandoval;ds;123;123;123
-GUIA;vicente;sandoval;183471273-4;Guia turistico;Ingles;4

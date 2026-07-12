@@ -2,12 +2,8 @@ package model;
 
 import data.Validador;
 
-/**
- * Clase base que define el comportamiento y datos generales de una Persona.
- * Mantiene una relación de composición con la clase Direccion.
- * @author Gabriel
- */
-public class Persona {
+/** Clase base para las personas relacionadas con la agencia. */
+public abstract class Persona {
     private String nombre;
     private String apellido;
     private Direccion direccion;
@@ -15,30 +11,33 @@ public class Persona {
     private String email;
     private String rut;
 
-    public Persona(String nombre, String apellido, Direccion direccion, String telefono, String email, String rut) {
-        this.nombre = Validador.validarTexto(nombre, "Sin Nombre");
-        this.apellido = Validador.validarTexto(apellido, "Sin Apellido");
-        this.direccion = direccion;
-        this.telefono = telefono != null ? telefono.trim() : "";
-        this.email = email != null ? email.trim() : "";
-        this.rut = rut != null ? rut.trim() : "";
+    protected Persona(String nombre, String apellido, Direccion direccion,
+                      String telefono, String email, String rut) {
+        this.nombre = Validador.validarTexto(nombre, "Sin nombre");
+        this.apellido = Validador.validarTexto(apellido, "Sin apellido");
+        this.direccion = direccion == null
+                ? new Direccion("Sin región", "Sin ciudad", "Sin comuna", "Sin calle", "0")
+                : direccion;
+        this.telefono = Validador.validarTexto(telefono, "Sin teléfono");
+        this.email = Validador.validarTexto(email, "Sin correo");
+        this.rut = Validador.validarTexto(rut, "Sin RUT");
     }
 
     public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
+    public void setNombre(String nombre) { this.nombre = Validador.validarTexto(nombre, "Sin nombre"); }
     public String getApellido() { return apellido; }
-    public void setApellido(String apellido) { this.apellido = apellido; }
+    public void setApellido(String apellido) { this.apellido = Validador.validarTexto(apellido, "Sin apellido"); }
     public Direccion getDireccion() { return direccion; }
-    public void setDireccion(Direccion direccion) { this.direccion = direccion; }
+    public void setDireccion(Direccion direccion) { if (direccion != null) this.direccion = direccion; }
     public String getTelefono() { return telefono; }
-    public void setTelefono(String telefono) { this.telefono = telefono; }
+    public void setTelefono(String telefono) { this.telefono = Validador.validarTexto(telefono, "Sin teléfono"); }
     public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public void setEmail(String email) { this.email = Validador.validarTexto(email, "Sin correo"); }
     public String getRut() { return rut; }
-    public void setRut(String rut) { this.rut = rut; }
+    public void setRut(String rut) { this.rut = Validador.validarTexto(rut, "Sin RUT"); }
 
     @Override
     public String toString() {
-        return "Persona{nombre='" + nombre + "', apellido='" + apellido + "', rut='" + rut + "'}";
+        return nombre + " " + apellido + " | RUT: " + rut;
     }
 }
