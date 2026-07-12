@@ -2,7 +2,7 @@ package model;
 
 import data.Validador;
 
-/** Guía encargado de actividades turísticas en terreno. */
+/** Guía encargado de actividades turísticas. */
 public class GuiaTuristico extends Persona implements Registrable {
     private String especialidad;
     private String idiomas;

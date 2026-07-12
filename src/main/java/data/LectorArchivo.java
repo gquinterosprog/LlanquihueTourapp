@@ -13,7 +13,7 @@ import model.GuiaTuristico;
 import model.Registrable;
 import model.Vehiculo;
 
-/** Lee y guarda los registros de la agencia en un archivo de texto. */
+/** Lee y guarda los registros en un archivo de texto */
 public final class LectorArchivo {
     private LectorArchivo() {
     }

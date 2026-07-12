@@ -2,7 +2,7 @@ package model;
 
 import data.Validador;
 
-/** Vehículo de transporte. No es Persona, pero es registrable. */
+/** Vehículo de transporte registrable */
 public class Vehiculo implements Registrable {
     private String patente;
     private String marcaModelo;

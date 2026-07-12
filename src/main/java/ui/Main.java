@@ -9,7 +9,7 @@ import model.Direccion;
 import model.GuiaTuristico;
 import model.Vehiculo;
 
-/** Punto de entrada, interfaz gráfica y persistencia de Llanquihue Tour. */
+/** Interfaz grafica para el proyecto */
 public class Main {
     private static final String ARCHIVO_DATOS = "datos.txt";
     private static final GestorEntidades GESTOR = new GestorEntidades();
