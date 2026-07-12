@@ -1,4 +1,4 @@
-package util;
+package data;
 
 import model.Direccion;
 import model.Empleado;
@@ -9,16 +9,10 @@ import java.util.ArrayList;
 
 /**
  * Clase de utilidad encargada de la lectura y procesamiento de archivos de texto.
- * Permite cargar datos externos en colecciones dinámicas (ArrayList).
  * @author Gabriel
  */
 public class LectorArchivo {
 
-    /**
-     * Lee un archivo plano (.txt o .csv) y retorna una colección dinámica de empleados.
-     * @param rutaArchivo Ruta física o lógica del origen de datos.
-     * @return ArrayList con los objetos Empleado correctamente instanciados.
-     */
     public static ArrayList<Empleado> cargarEmpleados(String rutaArchivo) {
         ArrayList<Empleado> lista = new ArrayList<>();
 
@@ -33,7 +27,6 @@ public class LectorArchivo {
                 String[] datos = linea.split(",");
 
                 if (datos.length >= 13) {
-
                     Direccion dir = new Direccion(
                             datos[2].trim(),
                             datos[3].trim(),
@@ -58,7 +51,7 @@ public class LectorArchivo {
                 }
             }
         } catch (IOException e) {
-            System.out.println(" Error crítico de I/O al acceder al archivo: " + e.getMessage());
+            System.out.println("Error crítico de I/O al acceder al archivo: " + e.getMessage());
         }
 
         return lista;
