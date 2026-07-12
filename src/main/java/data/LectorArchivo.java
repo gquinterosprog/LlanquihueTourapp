@@ -10,7 +10,7 @@ import model.*;
 
 public class LectorArchivo {
 
-    // Método para LEER
+
     public static ArrayList<Registrable> cargarDatos(String rutaArchivo) {
         ArrayList<Registrable> lista = new ArrayList<>();
 
@@ -52,7 +52,7 @@ public class LectorArchivo {
         return lista;
     }
 
-    // Método para ESCRIBIR (El que acabamos de agregar)
+
     public static void guardarRegistro(String rutaArchivo, String datos) {
         try (FileWriter fw = new FileWriter(rutaArchivo, true);
              PrintWriter pw = new PrintWriter(fw)) {
