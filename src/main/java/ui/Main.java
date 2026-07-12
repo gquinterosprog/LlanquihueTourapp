@@ -3,19 +3,21 @@ package ui;
 import model.*;
 import data.AgenciaService;
 import data.LectorArchivo;
+import data.Validador;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
-/**
- * Punto de entrada de la aplicación que despliega el menú administrativo a través de JOptionPane.
- * @author Gabriel
- */
 public class Main {
     public static void main(String[] args) {
         String archivoFuente = "empleados.txt";
-        ArrayList<Empleado> datosCargados = LectorArchivo.cargarEmpleados(archivoFuente);
+        ArrayList<Registrable> datosCargados = LectorArchivo.cargarDatos(archivoFuente);
 
-        AgenciaService servicio = new AgenciaService(datosCargados);
+        AgenciaService servicio = new AgenciaService(new ArrayList<>());
+
+        for (Registrable recurso : datosCargados) {
+            servicio.agregarRecurso(recurso);
+        }
+
         cargarDatosPrueba(servicio);
 
         String[] opcionesMenu = {
@@ -63,57 +65,80 @@ public class Main {
     }
 
     private static void registrarGuia(AgenciaService servicio) {
-        try {
-            String nombre = JOptionPane.showInputDialog("Ingrese nombre del guía:");
-            if (nombre == null || nombre.trim().isEmpty()) return;
-            String apellido = JOptionPane.showInputDialog("Ingrese apellido:");
-            String rut = JOptionPane.showInputDialog("Ingrese RUT:");
-            String especialidad = JOptionPane.showInputDialog("Ingrese especialidad:");
-            String idiomas = JOptionPane.showInputDialog("Ingrese idiomas:");
-            int experiencia = Integer.parseInt(JOptionPane.showInputDialog("Ingrese años de experiencia:"));
+        String nombre = pedirTextoSoloLetras("Ingrese nombre del guía:");
+        if (nombre == null) return;
 
-            Direccion dir = new Direccion("Los Lagos", "Puerto Varas", "Urbano", "Del Salvador", "250");
-            GuiaTuristico guia = new GuiaTuristico(nombre, apellido, dir, "955556666", "guia.registro@llanquihue.cl", rut, especialidad, idiomas, experiencia);
+        String apellido = pedirTextoSoloLetras("Ingrese apellido:");
+        if (apellido == null) return;
 
-            servicio.agregarRecurso(guia);
-            JOptionPane.showMessageDialog(null, "Guía Turístico registrado de forma correcta.", "Confirmación", JOptionPane.INFORMATION_MESSAGE);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error en el ingreso de parámetros numéricos.", "Error de Datos", JOptionPane.ERROR_MESSAGE);
-        }
+        String rut = pedirTextoLibre("Ingrese RUT:");
+        if (rut == null) return;
+
+        String especialidad = pedirTextoLibre("Ingrese especialidad:");
+        if (especialidad == null) return;
+
+        String idiomas = pedirTextoLibre("Ingrese idiomas:");
+        if (idiomas == null) return;
+
+        int experiencia = pedirEntero("Ingrese años de experiencia:");
+        if (experiencia == -1) return;
+
+        Direccion dir = new Direccion("Los Lagos", "Puerto Varas", "Urbano", "Del Salvador", "250");
+        GuiaTuristico guia = new GuiaTuristico(nombre, apellido, dir, "955556666", "guia.registro@llanquihue.cl", rut, especialidad, idiomas, experiencia);
+
+        servicio.agregarRecurso(guia);
+
+        String datosGuia = "GUIA;" + nombre + ";" + apellido + ";" + rut + ";" + especialidad + ";" + idiomas + ";" + experiencia;
+        data.LectorArchivo.guardarRegistro("empleados.txt", datosGuia);
+
+        JOptionPane.showMessageDialog(null, "Guía Turístico registrado de forma correcta.", "Confirmación", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private static void registrarVehiculo(AgenciaService servicio) {
-        try {
-            String patente = JOptionPane.showInputDialog("Ingrese patente (Formato ABCD-12):");
-            if (patente == null || patente.trim().isEmpty()) return;
-            String modelo = JOptionPane.showInputDialog("Ingrese marca y modelo del vehículo:");
-            int capacidad = Integer.parseInt(JOptionPane.showInputDialog("Ingrese capacidad máxima de pasajeros:"));
+        String patente = pedirTextoLibre("Ingrese patente (Formato ABCD-12):");
+        if (patente == null) return;
 
-            Vehiculo vehiculo = new Vehiculo(patente, modelo, capacidad);
-            servicio.agregarRecurso(vehiculo);
-            JOptionPane.showMessageDialog(null, "Vehículo integrado al inventario operacional.", "Confirmación", JOptionPane.INFORMATION_MESSAGE);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error en los valores de capacidad ingresados.", "Error de Datos", JOptionPane.ERROR_MESSAGE);
-        }
+        String modelo = pedirTextoLibre("Ingrese marca y modelo del vehículo:");
+        if (modelo == null) return;
+
+        int capacidad = pedirEntero("Ingrese capacidad máxima de pasajeros:");
+        if (capacidad == -1) return;
+
+        Vehiculo vehiculo = new Vehiculo(patente, modelo, capacidad);
+
+        servicio.agregarRecurso(vehiculo);
+
+        String datosVehiculo = "VEHICULO;" + patente + ";" + modelo + ";" + capacidad;
+        data.LectorArchivo.guardarRegistro("empleados.txt", datosVehiculo);
+
+        JOptionPane.showMessageDialog(null, "Vehículo integrado al inventario operacional.", "Confirmación", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private static void registrarColaborador(AgenciaService servicio) {
-        try {
-            String nombre = JOptionPane.showInputDialog("Ingrese nombre del colaborador:");
-            if (nombre == null || nombre.trim().isEmpty()) return;
-            String apellido = JOptionPane.showInputDialog("Ingrese apellido:");
-            String rut = JOptionPane.showInputDialog("Ingrese RUT:");
-            String empresa = JOptionPane.showInputDialog("Ingrese nombre de la empresa proveedora:");
-            String servicioPrestado = JOptionPane.showInputDialog("Ingrese tipo de servicio prestado:");
+        String nombre = pedirTextoSoloLetras("Ingrese nombre del colaborador:");
+        if (nombre == null) return;
 
-            Direccion dir = new Direccion("Los Lagos", "Llanquihue", "Costanera", "Vicente Pérez Rosales", "400");
-            ColaboradorExterno colab = new ColaboradorExterno(nombre, apellido, dir, "944443333", "contacto.empresa@proveedor.cl", rut, empresa, servicioPrestado);
+        String apellido = pedirTextoSoloLetras("Ingrese apellido:");
+        if (apellido == null) return;
 
-            servicio.agregarRecurso(colab);
-            JOptionPane.showMessageDialog(null, "Colaborador Externo vinculado exitosamente.", "Confirmación", JOptionPane.INFORMATION_MESSAGE);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error en el proceso de registro del colaborador.", "Error de Datos", JOptionPane.ERROR_MESSAGE);
-        }
+        String rut = pedirTextoLibre("Ingrese RUT:");
+        if (rut == null) return;
+
+        String empresa = pedirTextoLibre("Ingrese nombre de la empresa proveedora:");
+        if (empresa == null) return;
+
+        String servicioPrestado = pedirTextoLibre("Ingrese tipo de servicio prestado:");
+        if (servicioPrestado == null) return;
+
+        Direccion dir = new Direccion("Los Lagos", "Llanquihue", "Costanera", "Vicente Pérez Rosales", "400");
+        ColaboradorExterno colab = new ColaboradorExterno(nombre, apellido, dir, "944443333", "contacto.empresa@proveedor.cl", rut, empresa, servicioPrestado);
+
+        servicio.agregarRecurso(colab);
+
+        String datosColab = "COLABORADOR;" + nombre + ";" + apellido + ";" + rut + ";" + empresa + ";" + servicioPrestado;
+        data.LectorArchivo.guardarRegistro("empleados.txt", datosColab);
+
+        JOptionPane.showMessageDialog(null, "Colaborador Externo vinculado exitosamente.", "Confirmación", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private static void cargarDatosPrueba(AgenciaService servicio) {
@@ -121,5 +146,60 @@ public class Main {
         servicio.agregarRecurso(new GuiaTuristico("Ana", "Torres", dirBase, "977778888", "atorres@llanquihue.cl", "18.456.789-0", "Trekking y Senderismo", "Español, Inglés", 4));
         servicio.agregarRecurso(new Vehiculo("HGTR-45", "Mercedes-Benz Sprinter", 18));
         servicio.agregarRecurso(new ColaboradorExterno("Luis", "Morales", dirBase, "966662222", "lmorales@catamaranes.cl", "14.222.333-4", "Navegación Lago S.A.", "Transporte Lacustre"));
+    }
+
+    private static String pedirTextoSoloLetras(String mensaje) {
+        String texto = "";
+        boolean esValido = false;
+
+        while (!esValido) {
+            texto = JOptionPane.showInputDialog(mensaje);
+            if (texto == null) return null;
+
+            if (texto.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Error: El campo no puede estar vacío.", "Error de Validación", JOptionPane.ERROR_MESSAGE);
+            } else if (!Validador.esSoloLetras(texto)) {
+                JOptionPane.showMessageDialog(null, "Error: Este campo no permite números ni símbolos.", "Error de Formato", JOptionPane.ERROR_MESSAGE);
+            } else {
+                esValido = true;
+            }
+        }
+        return texto.trim();
+    }
+
+    private static String pedirTextoLibre(String mensaje) {
+        String texto = "";
+        boolean esValido = false;
+
+        while (!esValido) {
+            texto = JOptionPane.showInputDialog(mensaje);
+            if (texto == null) return null;
+
+            if (texto.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Error: El campo no puede estar vacío.", "Error de Validación", JOptionPane.ERROR_MESSAGE);
+            } else {
+                esValido = true;
+            }
+        }
+        return texto.trim();
+    }
+
+    private static int pedirEntero(String mensaje) {
+        int numero = -1;
+        while (numero < 0) {
+            String input = JOptionPane.showInputDialog(mensaje + " (Solo números positivos):");
+            if (input == null) return -1;
+
+            try {
+                numero = Integer.parseInt(input.trim());
+                if (numero < 0) {
+                    JOptionPane.showMessageDialog(null, "Error: El número no puede ser negativo.", "Error Numérico", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Error: Debe ingresar un número válido (ej: 5). No ingrese letras.", "Error de Formato", JOptionPane.ERROR_MESSAGE);
+                numero = -1;
+            }
+        }
+        return numero;
     }
 }

@@ -1,59 +1,64 @@
 package data;
 
-import model.Direccion;
-import model.Empleado;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import model.*;
 
-/**
- * Clase de utilidad encargada de la lectura y procesamiento de archivos de texto.
- * @author Gabriel
- */
 public class LectorArchivo {
 
-    public static ArrayList<Empleado> cargarEmpleados(String rutaArchivo) {
-        ArrayList<Empleado> lista = new ArrayList<>();
+    // Método para LEER
+    public static ArrayList<Registrable> cargarDatos(String rutaArchivo) {
+        ArrayList<Registrable> lista = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(rutaArchivo))) {
             String linea;
 
             while ((linea = br.readLine()) != null) {
-                if (linea.trim().isEmpty()) {
-                    continue;
-                }
+                if (linea.trim().isEmpty()) continue;
 
-                String[] datos = linea.split(",");
+                String[] partes = linea.split(";");
 
-                if (datos.length >= 13) {
-                    Direccion dir = new Direccion(
-                            datos[2].trim(),
-                            datos[3].trim(),
-                            datos[4].trim(),
-                            datos[5].trim(),
-                            datos[6].trim()
-                    );
+                try {
+                    switch (partes[0].toUpperCase()) {
+                        case "GUIA":
+                            Direccion dirGuia = new Direccion("Los Lagos", "Puerto Varas", "Urbano", "Del Salvador", "250");
+                            GuiaTuristico guia = new GuiaTuristico(partes[1], partes[2], dirGuia, "955556666", "guia@llanquihue.cl", partes[3], partes[4], partes[5], Integer.parseInt(partes[6]));
+                            lista.add(guia);
+                            break;
 
-                    Empleado emp = new Empleado(
-                            datos[0].trim(),
-                            datos[1].trim(),
-                            dir,
-                            datos[7].trim(),
-                            datos[8].trim(),
-                            datos[9].trim(),
-                            datos[10].trim(),
-                            datos[11].trim(),
-                            datos[12].trim()
-                    );
+                        case "VEHICULO":
+                            Vehiculo vehiculo = new Vehiculo(partes[1], partes[2], Integer.parseInt(partes[3]));
+                            lista.add(vehiculo);
+                            break;
 
-                    lista.add(emp);
+                        case "COLABORADOR":
+                            Direccion dirColab = new Direccion("Los Lagos", "Llanquihue", "Costanera", "Vicente Pérez Rosales", "400");
+                            ColaboradorExterno colab = new ColaboradorExterno(partes[1], partes[2], dirColab, "944443333", "contacto@proveedor.cl", partes[3], partes[4], partes[5]);
+                            lista.add(colab);
+                            break;
+                    }
+                } catch (Exception e) {
+                    System.out.println("Error al procesar la línea: " + linea + " - " + e.getMessage());
                 }
             }
-        } catch (IOException e) {
-            System.out.println("Error crítico de I/O al acceder al archivo: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error al leer el archivo " + rutaArchivo + ": " + e.getMessage());
         }
 
         return lista;
+    }
+
+    // Método para ESCRIBIR (El que acabamos de agregar)
+    public static void guardarRegistro(String rutaArchivo, String datos) {
+        try (FileWriter fw = new FileWriter(rutaArchivo, true);
+             PrintWriter pw = new PrintWriter(fw)) {
+            pw.println(datos);
+        } catch (IOException e) {
+            System.out.println("Error al escribir en el archivo: " + e.getMessage());
+        }
     }
 }
