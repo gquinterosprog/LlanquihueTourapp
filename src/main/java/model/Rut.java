@@ -1,12 +1,13 @@
 package model;
 
 import util.RutInvalidoException;
+import util.Validador;
 
 public class Rut {
     private String numero;
 
     public Rut(String numero) throws RutInvalidoException {
-        if (numero == null || !numero.matches("[0-9]{8}-[0-9kK]")) {
+        if (!Validador.esRutValido(numero)) {
             throw new RutInvalidoException("El RUT debe tener el formato XXXXXXXX-Y.");
         }
         this.numero = numero.toUpperCase();
@@ -17,7 +18,7 @@ public class Rut {
     }
 
     public void setNumero(String numero) throws RutInvalidoException {
-        if (numero == null || !numero.matches("[0-9]{8}-[0-9kK]")) {
+        if (!Validador.esRutValido(numero)) {
             throw new RutInvalidoException("El RUT debe tener el formato XXXXXXXX-Y.");
         }
         this.numero = numero.toUpperCase();

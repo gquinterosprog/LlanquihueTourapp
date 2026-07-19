@@ -25,6 +25,10 @@ public class Validador {
         return texto != null && texto.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$");
     }
 
+    public static boolean esRutValido(String rut) {
+        return rut != null && rut.matches("[0-9]{8}-[0-9kK]");
+    }
+
     public static boolean esPatenteValida(String patente) {
         return patente != null && patente.matches("[a-zA-Z0-9]{6}");
     }
