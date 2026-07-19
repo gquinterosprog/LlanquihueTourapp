@@ -1,6 +1,6 @@
 package model;
 
-import data.Validador;
+import util.Validador;
 
 /** Persona externa que presta un servicio a la agencia. */
 public class ColaboradorExterno extends Persona implements Registrable {
@@ -8,7 +8,7 @@ public class ColaboradorExterno extends Persona implements Registrable {
     private String servicioPrestado;
 
     public ColaboradorExterno(String nombre, String apellido, Direccion direccion, String telefono,
-                              String email, String rut, String empresaOrigen, String servicioPrestado) {
+                              String email, Rut rut, String empresaOrigen, String servicioPrestado) {
         super(nombre, apellido, direccion, telefono, email, rut);
         this.empresaOrigen = Validador.validarTexto(empresaOrigen, "Particular");
         this.servicioPrestado = Validador.validarTexto(servicioPrestado, "No especificado");
@@ -22,6 +22,12 @@ public class ColaboradorExterno extends Persona implements Registrable {
     @Override
     public String mostrarResumen() {
         return "Colaborador externo | Nombre: " + getNombre() + " " + getApellido()
+                + " | RUT: " + getRut()
                 + " | Empresa: " + empresaOrigen + " | Servicio: " + servicioPrestado;
+    }
+
+    @Override
+    public String toString() {
+        return mostrarResumen();
     }
 }

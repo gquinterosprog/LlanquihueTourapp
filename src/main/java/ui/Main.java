@@ -1,27 +1,29 @@
 package ui;
 
 import data.GestorEntidades;
-import data.LectorArchivo;
-import data.Validador;
 import javax.swing.JOptionPane;
-import model.ColaboradorExterno;
-import model.Direccion;
-import model.GuiaTuristico;
-import model.Vehiculo;
+import model.Registrable;
 
-/** Interfaz grafica para el proyecto */
 public class Main {
     private static final String ARCHIVO_DATOS = "datos.txt";
-    private static final GestorEntidades GESTOR = new GestorEntidades();
 
     public static void main(String[] args) {
-        cargarDatosGuardados();
+        GestorEntidades gestor = new GestorEntidades(ARCHIVO_DATOS);
+        FormularioEntidades formulario = new FormularioEntidades();
+        ejecutarMenu(gestor, formulario);
+    }
 
+    private static void ejecutarMenu(GestorEntidades gestor, FormularioEntidades formulario) {
         String[] opciones = {
                 "Registrar guía turístico",
                 "Registrar vehículo",
                 "Registrar colaborador externo",
+                "Registrar empleado",
+                "Registrar cliente",
+                "Registrar proveedor",
                 "Mostrar entidades registradas",
+                "Buscar entidades",
+                "Mostrar estadísticas",
                 "Salir"
         };
 
@@ -29,7 +31,7 @@ public class Main {
         while (ejecutando) {
             String opcion = (String) JOptionPane.showInputDialog(
                     null,
-                    "Seleccione una opción:",
+                    "Entidades cargadas: " + gestor.obtenerCantidadRecursos() + "\nSeleccione una opción:",
                     "Llanquihue Tour - Gestión de entidades",
                     JOptionPane.QUESTION_MESSAGE,
                     null,
@@ -39,126 +41,59 @@ public class Main {
 
             if (opcion == null || opcion.equals("Salir")) {
                 ejecutando = false;
-            } else if (opcion.equals("Registrar guía turístico")) {
-                registrarGuia();
+                continue;
+            }
+
+            if (opcion.equals("Registrar guía turístico")) {
+                registrar(gestor, formulario.crearGuiaTuristico());
             } else if (opcion.equals("Registrar vehículo")) {
-                registrarVehiculo();
+                registrar(gestor, formulario.crearVehiculo());
             } else if (opcion.equals("Registrar colaborador externo")) {
-                registrarColaborador();
+                registrar(gestor, formulario.crearColaboradorExterno());
+            } else if (opcion.equals("Registrar empleado")) {
+                registrar(gestor, formulario.crearEmpleado());
+            } else if (opcion.equals("Registrar cliente")) {
+                registrar(gestor, formulario.crearCliente());
+            } else if (opcion.equals("Registrar proveedor")) {
+                registrar(gestor, formulario.crearProveedor());
             } else if (opcion.equals("Mostrar entidades registradas")) {
-                JOptionPane.showMessageDialog(null, GESTOR.generarReporteRecursos(),
-                        "Reporte de entidades", JOptionPane.INFORMATION_MESSAGE);
+                mostrarTexto("Entidades registradas", gestor.generarReporteRecursos());
+            } else if (opcion.equals("Buscar entidades")) {
+                buscar(gestor);
+            } else if (opcion.equals("Mostrar estadísticas")) {
+                mostrarTexto("Estadísticas", gestor.generarEstadisticasPorTipo());
+            } else {
+                JOptionPane.showMessageDialog(null, "Opción no reconocida.");
             }
         }
-        JOptionPane.showMessageDialog(null, "Sesión finalizada. Los registros permanecen guardados en " + ARCHIVO_DATOS + ".",
+
+        JOptionPane.showMessageDialog(null,
+                "Sesión finalizada. Los registros permanecen guardados en " + ARCHIVO_DATOS + ".",
                 "Llanquihue Tour", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    private static void cargarDatosGuardados() {
-        LectorArchivo.cargarDatos(ARCHIVO_DATOS).forEach(GESTOR::agregarRecurso);
+    private static void registrar(GestorEntidades gestor, Registrable recurso) {
+        if (recurso == null) return;
+        String resultado = gestor.registrarRecurso(recurso);
+        int tipoMensaje;
+        if (resultado.startsWith("Entidad")) {
+            tipoMensaje = JOptionPane.INFORMATION_MESSAGE;
+        } else {
+            tipoMensaje = JOptionPane.WARNING_MESSAGE;
+        }
+        JOptionPane.showMessageDialog(null, resultado, "Registro", tipoMensaje);
     }
 
-    private static void registrarGuia() {
-        String nombre = pedirNombre("Ingrese el nombre del guía:");
-        if (nombre == null) return;
-        String apellido = pedirNombre("Ingrese el apellido del guía:");
-        if (apellido == null) return;
-        String rut = pedirTexto("Ingrese el RUT:");
-        if (rut == null) return;
-        String especialidad = pedirTexto("Ingrese la especialidad:");
-        if (especialidad == null) return;
-        String idiomas = pedirTexto("Ingrese los idiomas:");
-        if (idiomas == null) return;
-        Integer experiencia = pedirEnteroNoNegativo("Ingrese años de experiencia:");
-        if (experiencia == null) return;
-
-        Direccion direccion = new Direccion("Los Lagos", "Puerto Varas", "Centro", "Del Salvador", "250");
-        GESTOR.agregarRecurso(new GuiaTuristico(nombre, apellido, direccion, "Sin teléfono",
-                "Sin correo", rut, especialidad, idiomas, experiencia));
-        LectorArchivo.guardarRegistro(ARCHIVO_DATOS,
-                "GUIA;" + nombre + ";" + apellido + ";" + rut + ";" + especialidad + ";" + idiomas + ";" + experiencia);
-        mostrarConfirmacion("Guía turístico registrado y guardado correctamente.");
-    }
-
-    private static void registrarVehiculo() {
-        String patente = pedirTexto("Ingrese la patente:");
-        if (patente == null) return;
-        String modelo = pedirTexto("Ingrese marca y modelo:");
-        if (modelo == null) return;
-        Integer capacidad = pedirEnteroPositivo("Ingrese capacidad de pasajeros:");
-        if (capacidad == null) return;
-
-        GESTOR.agregarRecurso(new Vehiculo(patente, modelo, capacidad));
-        LectorArchivo.guardarRegistro(ARCHIVO_DATOS, "VEHICULO;" + patente + ";" + modelo + ";" + capacidad);
-        mostrarConfirmacion("Vehículo registrado y guardado correctamente.");
-    }
-
-    private static void registrarColaborador() {
-        String nombre = pedirNombre("Ingrese el nombre del colaborador:");
-        if (nombre == null) return;
-        String apellido = pedirNombre("Ingrese el apellido del colaborador:");
-        if (apellido == null) return;
-        String rut = pedirTexto("Ingrese el RUT:");
-        if (rut == null) return;
-        String empresa = pedirTexto("Ingrese la empresa de origen:");
-        if (empresa == null) return;
-        String servicio = pedirTexto("Ingrese el servicio prestado:");
-        if (servicio == null) return;
-
-        Direccion direccion = new Direccion("Los Lagos", "Llanquihue", "Centro", "Costanera", "400");
-        GESTOR.agregarRecurso(new ColaboradorExterno(nombre, apellido, direccion, "Sin teléfono",
-                "Sin correo", rut, empresa, servicio));
-        LectorArchivo.guardarRegistro(ARCHIVO_DATOS,
-                "COLABORADOR;" + nombre + ";" + apellido + ";" + rut + ";" + empresa + ";" + servicio);
-        mostrarConfirmacion("Colaborador externo registrado y guardado correctamente.");
-    }
-
-    private static String pedirNombre(String mensaje) {
-        while (true) {
-            String texto = JOptionPane.showInputDialog(null, mensaje);
-            if (texto == null) return null;
-            if (Validador.esSoloLetras(texto)) return texto.trim();
-            JOptionPane.showMessageDialog(null, "Ingrese solo letras y espacios.", "Validación", JOptionPane.ERROR_MESSAGE);
+    private static void buscar(GestorEntidades gestor) {
+        String criterio = JOptionPane.showInputDialog(null,
+                "Ingrese nombre, RUT, patente, empresa, servicio u otro dato:",
+                "Buscar entidades", JOptionPane.QUESTION_MESSAGE);
+        if (criterio != null && !criterio.trim().isEmpty()) {
+            mostrarTexto("Resultados de búsqueda", gestor.buscarRecursos(criterio));
         }
     }
 
-    private static String pedirTexto(String mensaje) {
-        while (true) {
-            String texto = JOptionPane.showInputDialog(null, mensaje);
-            if (texto == null) return null;
-            if (texto.contains(";")) {
-                JOptionPane.showMessageDialog(null, "No use punto y coma (;), porque se utiliza para guardar los datos.", "Validación", JOptionPane.ERROR_MESSAGE);
-            } else if (!texto.isBlank()) {
-                return texto.trim();
-            } else {
-                JOptionPane.showMessageDialog(null, "El campo es obligatorio.", "Validación", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }
-
-    private static Integer pedirEnteroNoNegativo(String mensaje) {
-        while (true) {
-            String texto = JOptionPane.showInputDialog(null, mensaje);
-            if (texto == null) return null;
-            try {
-                int numero = Integer.parseInt(texto.trim());
-                if (numero >= 0) return numero;
-            } catch (NumberFormatException ignored) {
-                // Se muestra el mensaje de validación inferior.
-            }
-            JOptionPane.showMessageDialog(null, "Ingrese un número entero igual o mayor que cero.", "Validación", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    private static Integer pedirEnteroPositivo(String mensaje) {
-        while (true) {
-            Integer numero = pedirEnteroNoNegativo(mensaje);
-            if (numero == null || numero > 0) return numero;
-            JOptionPane.showMessageDialog(null, "El número debe ser mayor que cero.", "Validación", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    private static void mostrarConfirmacion(String mensaje) {
-        JOptionPane.showMessageDialog(null, mensaje, "Llanquihue Tour", JOptionPane.INFORMATION_MESSAGE);
+    private static void mostrarTexto(String titulo, String contenido) {
+        JOptionPane.showMessageDialog(null, contenido, titulo, JOptionPane.INFORMATION_MESSAGE);
     }
 }

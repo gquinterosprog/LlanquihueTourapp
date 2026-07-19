@@ -7,11 +7,16 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
+import model.Cliente;
 import model.ColaboradorExterno;
 import model.Direccion;
+import model.Empleado;
 import model.GuiaTuristico;
+import model.Proveedor;
 import model.Registrable;
+import model.Rut;
 import model.Vehiculo;
+import util.RutInvalidoException;
 
 /** Lee y guarda los registros en un archivo de texto */
 public final class LectorArchivo {
@@ -28,7 +33,7 @@ public final class LectorArchivo {
 
         try {
             for (String linea : Files.readAllLines(ruta, StandardCharsets.UTF_8)) {
-                if (linea.isBlank()) continue;
+                if (linea.trim().isEmpty()) continue;
                 procesarLinea(linea, recursos);
             }
         } catch (IOException e) {
@@ -37,37 +42,50 @@ public final class LectorArchivo {
         return recursos;
     }
 
-    public static void guardarRegistro(String rutaArchivo, String datos) {
+    public static boolean guardarRegistro(String rutaArchivo, String linea) {
+        if (linea == null || linea.trim().isEmpty()) return false;
         try {
-            Files.writeString(Path.of(rutaArchivo), datos + System.lineSeparator(), StandardCharsets.UTF_8,
+            Files.writeString(Path.of(rutaArchivo), linea + System.lineSeparator(), StandardCharsets.UTF_8,
                     StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+            return true;
         } catch (IOException e) {
             System.out.println("No fue posible guardar el registro: " + e.getMessage());
+            return false;
         }
     }
 
     private static void procesarLinea(String linea, List<Registrable> recursos) {
         String[] partes = linea.split(";", -1);
         try {
-            switch (partes[0].trim().toUpperCase()) {
-                case "GUIA" -> {
-                    validarCantidadCampos(partes, 7);
-                    recursos.add(new GuiaTuristico(partes[1], partes[2], direccionGuia(), "Sin teléfono",
-                            "Sin correo", partes[3], partes[4], partes[5], Integer.parseInt(partes[6])));
-                }
-                case "VEHICULO" -> {
-                    validarCantidadCampos(partes, 4);
-                    recursos.add(new Vehiculo(partes[1], partes[2], Integer.parseInt(partes[3])));
-                }
-                case "COLABORADOR" -> {
-                    validarCantidadCampos(partes, 6);
-                    recursos.add(new ColaboradorExterno(partes[1], partes[2], direccionColaborador(), "Sin teléfono",
-                            "Sin correo", partes[3], partes[4], partes[5]));
-                }
-                default -> System.out.println("Tipo de registro desconocido: " + partes[0]);
+            String tipo = partes[0].trim().toUpperCase();
+            if (tipo.equals("GUIA")) {
+                validarCantidadCampos(partes, 14);
+                recursos.add(new GuiaTuristico(partes[1], partes[2], crearDireccion(partes), partes[4],
+                        partes[5], new Rut(partes[3]), partes[11], partes[12], Integer.parseInt(partes[13])));
+            } else if (tipo.equals("VEHICULO")) {
+                validarCantidadCampos(partes, 4);
+                recursos.add(new Vehiculo(partes[1], partes[2], Integer.parseInt(partes[3])));
+            } else if (tipo.equals("COLABORADOR")) {
+                validarCantidadCampos(partes, 13);
+                recursos.add(new ColaboradorExterno(partes[1], partes[2], crearDireccion(partes), partes[4],
+                        partes[5], new Rut(partes[3]), partes[11], partes[12]));
+            } else if (tipo.equals("EMPLEADO")) {
+                validarCantidadCampos(partes, 14);
+                recursos.add(new Empleado(partes[1], partes[2], crearDireccion(partes), partes[4],
+                        partes[5], new Rut(partes[3]), partes[11], partes[12], partes[13]));
+            } else if (tipo.equals("CLIENTE")) {
+                validarCantidadCampos(partes, 13);
+                recursos.add(new Cliente(partes[1], partes[2], crearDireccion(partes), partes[4],
+                        partes[5], new Rut(partes[3]), partes[11], partes[12]));
+            } else if (tipo.equals("PROVEEDOR")) {
+                validarCantidadCampos(partes, 13);
+                recursos.add(new Proveedor(partes[1], partes[2], crearDireccion(partes), partes[4],
+                        partes[5], new Rut(partes[3]), partes[11], partes[12]));
+            } else {
+                System.out.println("Tipo de registro desconocido: " + partes[0]);
             }
-        } catch (IllegalArgumentException e) {
-            System.out.println("Registro omitido por formato inválido: " + linea);
+        } catch (IllegalArgumentException | RutInvalidoException e) {
+            System.out.println("Registro omitido por formato inválido: " + linea + " (" + e.getMessage() + ")");
         }
     }
 
@@ -77,11 +95,7 @@ public final class LectorArchivo {
         }
     }
 
-    private static Direccion direccionGuia() {
-        return new Direccion("Los Lagos", "Puerto Varas", "Centro", "Del Salvador", "250");
-    }
-
-    private static Direccion direccionColaborador() {
-        return new Direccion("Los Lagos", "Llanquihue", "Centro", "Costanera", "400");
+    private static Direccion crearDireccion(String[] partes) {
+        return new Direccion(partes[6], partes[7], partes[8], partes[9], partes[10]);
     }
 }

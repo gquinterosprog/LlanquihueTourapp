@@ -1,6 +1,6 @@
 package model;
 
-import data.Validador;
+import util.Validador;
 
 /** Colaborador interno de la agencia. */
 public class Empleado extends Persona implements Registrable {
@@ -9,7 +9,7 @@ public class Empleado extends Persona implements Registrable {
     private String jornada;
 
     public Empleado(String nombre, String apellido, Direccion direccion, String telefono,
-                    String email, String rut, String area, String superior, String jornada) {
+                    String email, Rut rut, String area, String superior, String jornada) {
         super(nombre, apellido, direccion, telefono, email, rut);
         this.area = Validador.validarTexto(area, "General");
         this.superior = Validador.validarTexto(superior, "Sin asignar");
@@ -26,6 +26,12 @@ public class Empleado extends Persona implements Registrable {
     @Override
     public String mostrarResumen() {
         return "Empleado interno | Nombre: " + getNombre() + " " + getApellido()
+                + " | RUT: " + getRut()
                 + " | Área: " + area + " | Jornada: " + jornada;
+    }
+
+    @Override
+    public String toString() {
+        return mostrarResumen();
     }
 }

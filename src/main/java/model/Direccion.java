@@ -1,6 +1,6 @@
 package model;
 
-import data.Validador;
+import util.Validador;
 
 /** Dirección asociada a una persona de la agencia. */
 public class Direccion {

@@ -1,4 +1,1 @@
-GUIA;vicente;sandoval;18493823-3;guia turistico;ingles;4
-GUIA;vicente;sandoval;18493858-k;guia turistico;ingles;4
-VEHICULO;xy7654;toyota hilux;4
-COLABORADOR;salvador;ortiz;18372734-3;codelco;transporte maquinaria
+GUIA;Gabriel;quinteros;18498184-K;12345567;qweoi12312@gmail.com;metropoli@;sntgo;lafl;aven;123123123;turistico;ingles@@@;4
