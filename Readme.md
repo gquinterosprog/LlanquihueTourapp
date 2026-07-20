@@ -6,6 +6,7 @@ Prototipo Java para digitalizar la gestión de entidades de la agencia de turism
 
 - Registra seis tipos de entidades mediante formularios con validación.
 - Solicita dirección, teléfono y correo al usuario; no utiliza datos personales fijos.
+- Exige los campos obligatorios y no reemplaza datos faltantes con valores predeterminados.
 - Valida el RUT con ocho números, guion y un número o `K` mediante una excepción personalizada.
 - Valida patentes de seis caracteres alfanuméricos, teléfonos de 8 o 9 dígitos y correos electrónicos.
 - Evita registros duplicados utilizando el RUT o la patente como identificador.

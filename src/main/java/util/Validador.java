@@ -2,22 +2,22 @@ package util;
 
 public class Validador {
 
-    public static String validarTexto(String texto, String valorDefecto) {
+    public static String validarTexto(String texto, String nombreCampo) {
         if (texto == null || texto.trim().isEmpty()) {
-            return valorDefecto;
+            throw new IllegalArgumentException("El campo " + nombreCampo + " es obligatorio.");
         }
         return texto.trim();
     }
 
-    public static int validarEntero(String texto, int valorDefecto) {
+    public static int validarEntero(String texto, String nombreCampo) {
         try {
             int valor = Integer.parseInt(texto.trim());
             if (valor >= 0) {
                 return valor;
             }
-            return valorDefecto;
+            throw new IllegalArgumentException("El campo " + nombreCampo + " no puede ser negativo.");
         } catch (NumberFormatException | NullPointerException e) {
-            return valorDefecto;
+            throw new IllegalArgumentException("El campo " + nombreCampo + " debe ser un número entero.");
         }
     }
 

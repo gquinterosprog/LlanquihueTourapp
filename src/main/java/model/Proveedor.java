@@ -9,15 +9,15 @@ public class Proveedor extends Persona implements Registrable {
     public Proveedor(String nombre, String apellido, Direccion direccion, String telefono,
                      String email, Rut rut, String empresa, String servicioOfrecido) {
         super(nombre, apellido, direccion, telefono, email, rut);
-        this.empresa = Validador.validarTexto(empresa, "Proveedor independiente");
-        this.servicioOfrecido = Validador.validarTexto(servicioOfrecido, "No especificado");
+        setEmpresa(empresa);
+        setServicioOfrecido(servicioOfrecido);
     }
 
     public String getEmpresa() { return empresa; }
-    public void setEmpresa(String empresa) { this.empresa = Validador.validarTexto(empresa, "Proveedor independiente"); }
+    public void setEmpresa(String empresa) { this.empresa = Validador.validarTexto(empresa, "empresa"); }
     public String getServicioOfrecido() { return servicioOfrecido; }
     public void setServicioOfrecido(String servicioOfrecido) {
-        this.servicioOfrecido = Validador.validarTexto(servicioOfrecido, "No especificado");
+        this.servicioOfrecido = Validador.validarTexto(servicioOfrecido, "servicio ofrecido");
     }
 
     @Override

@@ -10,14 +10,14 @@ public class ColaboradorExterno extends Persona implements Registrable {
     public ColaboradorExterno(String nombre, String apellido, Direccion direccion, String telefono,
                               String email, Rut rut, String empresaOrigen, String servicioPrestado) {
         super(nombre, apellido, direccion, telefono, email, rut);
-        this.empresaOrigen = Validador.validarTexto(empresaOrigen, "Particular");
-        this.servicioPrestado = Validador.validarTexto(servicioPrestado, "No especificado");
+        setEmpresaOrigen(empresaOrigen);
+        setServicioPrestado(servicioPrestado);
     }
 
     public String getEmpresaOrigen() { return empresaOrigen; }
-    public void setEmpresaOrigen(String empresaOrigen) { this.empresaOrigen = Validador.validarTexto(empresaOrigen, "Particular"); }
+    public void setEmpresaOrigen(String empresaOrigen) { this.empresaOrigen = Validador.validarTexto(empresaOrigen, "empresa de origen"); }
     public String getServicioPrestado() { return servicioPrestado; }
-    public void setServicioPrestado(String servicioPrestado) { this.servicioPrestado = Validador.validarTexto(servicioPrestado, "No especificado"); }
+    public void setServicioPrestado(String servicioPrestado) { this.servicioPrestado = Validador.validarTexto(servicioPrestado, "servicio prestado"); }
 
     @Override
     public String mostrarResumen() {

@@ -12,17 +12,22 @@ public class GuiaTuristico extends Persona implements Registrable {
                          String email, Rut rut, String especialidad, String idiomas,
                          int aniosExperiencia) {
         super(nombre, apellido, direccion, telefono, email, rut);
-        this.especialidad = Validador.validarTexto(especialidad, "General");
-        this.idiomas = Validador.validarTexto(idiomas, "Español");
-        this.aniosExperiencia = Math.max(aniosExperiencia, 0);
+        setEspecialidad(especialidad);
+        setIdiomas(idiomas);
+        setAniosExperiencia(aniosExperiencia);
     }
 
     public String getEspecialidad() { return especialidad; }
-    public void setEspecialidad(String especialidad) { this.especialidad = Validador.validarTexto(especialidad, "General"); }
+    public void setEspecialidad(String especialidad) { this.especialidad = Validador.validarTexto(especialidad, "especialidad"); }
     public String getIdiomas() { return idiomas; }
-    public void setIdiomas(String idiomas) { this.idiomas = Validador.validarTexto(idiomas, "Español"); }
+    public void setIdiomas(String idiomas) { this.idiomas = Validador.validarTexto(idiomas, "idiomas"); }
     public int getAniosExperiencia() { return aniosExperiencia; }
-    public void setAniosExperiencia(int aniosExperiencia) { this.aniosExperiencia = Math.max(aniosExperiencia, 0); }
+    public void setAniosExperiencia(int aniosExperiencia) {
+        if (aniosExperiencia < 0) {
+            throw new IllegalArgumentException("Los años de experiencia no pueden ser negativos.");
+        }
+        this.aniosExperiencia = aniosExperiencia;
+    }
 
     @Override
     public String mostrarResumen() {

@@ -11,17 +11,17 @@ public class Empleado extends Persona implements Registrable {
     public Empleado(String nombre, String apellido, Direccion direccion, String telefono,
                     String email, Rut rut, String area, String superior, String jornada) {
         super(nombre, apellido, direccion, telefono, email, rut);
-        this.area = Validador.validarTexto(area, "General");
-        this.superior = Validador.validarTexto(superior, "Sin asignar");
-        this.jornada = Validador.validarTexto(jornada, "No asignada");
+        setArea(area);
+        setSuperior(superior);
+        setJornada(jornada);
     }
 
     public String getArea() { return area; }
-    public void setArea(String area) { this.area = Validador.validarTexto(area, "General"); }
+    public void setArea(String area) { this.area = Validador.validarTexto(area, "área"); }
     public String getSuperior() { return superior; }
-    public void setSuperior(String superior) { this.superior = Validador.validarTexto(superior, "Sin asignar"); }
+    public void setSuperior(String superior) { this.superior = Validador.validarTexto(superior, "superior"); }
     public String getJornada() { return jornada; }
-    public void setJornada(String jornada) { this.jornada = Validador.validarTexto(jornada, "No asignada"); }
+    public void setJornada(String jornada) { this.jornada = Validador.validarTexto(jornada, "jornada"); }
 
     @Override
     public String mostrarResumen() {

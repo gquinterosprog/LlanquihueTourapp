@@ -183,6 +183,7 @@ public class FormularioEntidades {
             try {
                 int numero = Integer.parseInt(texto.trim());
                 if (numero >= 0) return numero;
+                mostrarError("El número debe ser igual o mayor que cero.");
             } catch (NumberFormatException e) {
                 mostrarError("Ingrese un número entero.");
             }

@@ -1,10 +1,10 @@
 package data;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import model.Cliente;
@@ -25,14 +25,10 @@ public final class LectorArchivo {
 
     public static List<Registrable> cargarDatos(String rutaArchivo) {
         List<Registrable> recursos = new ArrayList<>();
-        Path ruta = Path.of(rutaArchivo);
 
-        if (!Files.exists(ruta)) {
-            return recursos;
-        }
-
-        try {
-            for (String linea : Files.readAllLines(ruta, StandardCharsets.UTF_8)) {
+        try (BufferedReader lector = new BufferedReader(new FileReader(rutaArchivo))) {
+            String linea;
+            while ((linea = lector.readLine()) != null) {
                 if (linea.trim().isEmpty()) continue;
                 procesarLinea(linea, recursos);
             }
@@ -44,9 +40,9 @@ public final class LectorArchivo {
 
     public static boolean guardarRegistro(String rutaArchivo, String linea) {
         if (linea == null || linea.trim().isEmpty()) return false;
-        try {
-            Files.writeString(Path.of(rutaArchivo), linea + System.lineSeparator(), StandardCharsets.UTF_8,
-                    StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+        try (FileWriter archivo = new FileWriter(rutaArchivo, true);
+             PrintWriter escritor = new PrintWriter(archivo)) {
+            escritor.println(linea);
             return true;
         } catch (IOException e) {
             System.out.println("No fue posible guardar el registro: " + e.getMessage());

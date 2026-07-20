@@ -10,8 +10,8 @@ public class Vehiculo implements Registrable {
 
     public Vehiculo(String patente, String marcaModelo, int capacidadPasajeros) {
         setPatente(patente);
-        this.marcaModelo = Validador.validarTexto(marcaModelo, "Desconocido");
-        this.capacidadPasajeros = Math.max(capacidadPasajeros, 1);
+        setMarcaModelo(marcaModelo);
+        setCapacidadPasajeros(capacidadPasajeros);
     }
 
     public String getPatente() { return patente; }
@@ -22,9 +22,14 @@ public class Vehiculo implements Registrable {
         this.patente = patente.toUpperCase();
     }
     public String getMarcaModelo() { return marcaModelo; }
-    public void setMarcaModelo(String marcaModelo) { this.marcaModelo = Validador.validarTexto(marcaModelo, "Desconocido"); }
+    public void setMarcaModelo(String marcaModelo) { this.marcaModelo = Validador.validarTexto(marcaModelo, "marca y modelo"); }
     public int getCapacidadPasajeros() { return capacidadPasajeros; }
-    public void setCapacidadPasajeros(int capacidadPasajeros) { this.capacidadPasajeros = Math.max(capacidadPasajeros, 1); }
+    public void setCapacidadPasajeros(int capacidadPasajeros) {
+        if (capacidadPasajeros <= 0) {
+            throw new IllegalArgumentException("La capacidad debe ser mayor que cero.");
+        }
+        this.capacidadPasajeros = capacidadPasajeros;
+    }
 
     @Override
     public String mostrarResumen() {

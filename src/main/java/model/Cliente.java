@@ -9,17 +9,17 @@ public class Cliente extends Persona implements Registrable {
     public Cliente(String nombre, String apellido, Direccion direccion, String telefono,
                    String email, Rut rut, String preferenciaTuristica, String canalContacto) {
         super(nombre, apellido, direccion, telefono, email, rut);
-        this.preferenciaTuristica = Validador.validarTexto(preferenciaTuristica, "Sin preferencia");
-        this.canalContacto = Validador.validarTexto(canalContacto, "Correo electrónico");
+        setPreferenciaTuristica(preferenciaTuristica);
+        setCanalContacto(canalContacto);
     }
 
     public String getPreferenciaTuristica() { return preferenciaTuristica; }
     public void setPreferenciaTuristica(String preferenciaTuristica) {
-        this.preferenciaTuristica = Validador.validarTexto(preferenciaTuristica, "Sin preferencia");
+        this.preferenciaTuristica = Validador.validarTexto(preferenciaTuristica, "preferencia turística");
     }
     public String getCanalContacto() { return canalContacto; }
     public void setCanalContacto(String canalContacto) {
-        this.canalContacto = Validador.validarTexto(canalContacto, "Correo electrónico");
+        this.canalContacto = Validador.validarTexto(canalContacto, "canal de contacto");
     }
 
     @Override
